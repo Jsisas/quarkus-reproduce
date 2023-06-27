@@ -20,8 +20,13 @@ dependencies {
     implementation 'io.quarkus:quarkus-jackson'
     implementation 'io.quarkus:quarkus-config-yaml'
 
+    testImplementation "org.projectlombok:lombok:1.18.28"
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+
     testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.quarkus:quarkus-junit5-mockito'
     testImplementation 'io.rest-assured:rest-assured'
+
 }
 
 group 'com.optionalWithDefault'
