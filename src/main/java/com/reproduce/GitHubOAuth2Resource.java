@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,19 +25,21 @@ public class GitHubOAuth2Resource {
     public void authorizeGitHub(RoutingExchange rex) {
         HttpServerRequest req = rex.request();
         AppConfig.ExternalOAuth2 authConfig = config.externalOauth2();
-        Optional<AppConfig.GitHub> gitHubOpt = authConfig.gitHub();
 
-        gitHubOpt.ifPresentOrElse(
-                gh -> respondWithGitHubConfigVariables(rex, gh),
-                () -> handleGitHubOAuthNotEnabled(rex, req.absoluteURI()));
+        AppConfig.GitHub github = authConfig.gitHub();
 
+        if (github.client().isPresent()) {
+            respondWithGitHubConfigVariables(rex, github);
+        } else {
+            handleGitHubOAuthNotEnabled(rex, req.absoluteURI());
+        }
     }
 
     private void respondWithGitHubConfigVariables(RoutingExchange rex, AppConfig.GitHub gitHub) {
         try {
             Map<String, String> responseMap = Map.of(
-                    "clientId", gitHub.clientId(),
-                    "clientSecret", gitHub.clientSecret(),
+                    "clientId", gitHub.client().get().clientId(),
+                    "clientSecret", gitHub.client().get().clientSecret(),
                     "baseUrl", gitHub.baseUrl(),
                     "userInfoUrl", gitHub.userInfoUrl()
             );

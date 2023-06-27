@@ -22,11 +22,11 @@ class WhenGitHubOAuth2ConfigExistsEndpointTest {
 
     @Test
     void testGithubOAuth2ResourceWhenConfigExists() throws JsonProcessingException {
-        AppConfig.GitHub gitHubConfig = config.externalOauth2().gitHub().get();
+        AppConfig.GitHub gitHubConfig = config.externalOauth2().gitHub();
 
         Map<String, String> responseMap = Map.of(
-                    "clientId", gitHubConfig.clientId(),
-                    "clientSecret", gitHubConfig.clientSecret(),
+                    "clientId", gitHubConfig.client().get().clientId(),
+                    "clientSecret", gitHubConfig.client().get().clientSecret(),
                     "baseUrl", gitHubConfig.baseUrl(),
                     "userInfoUrl", gitHubConfig.userInfoUrl()
             );
