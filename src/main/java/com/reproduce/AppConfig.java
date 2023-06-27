@@ -3,6 +3,7 @@ package com.reproduce;
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithName;
+import io.smallrye.config.WithParentName;
 
 import java.util.Optional;
 
@@ -13,19 +14,23 @@ public interface AppConfig {
     ExternalOAuth2 externalOauth2();
 
     interface ExternalOAuth2 {
-        Optional<GitHub> gitHub();
+        GitHub gitHub();
     }
 
     interface GitHub {
-
         @WithDefault("https://github.com")
         String baseUrl();
 
         @WithDefault("https://api.github.com/user")
         String userInfoUrl();
 
-        String clientId();
+        @WithParentName
+        Optional<Client> client();
 
-        String clientSecret();
+        interface Client {
+            String clientId();
+
+            String clientSecret();
+        }
     }
 }
